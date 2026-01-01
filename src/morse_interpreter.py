@@ -1,0 +1,35 @@
+import time
+from data.morse_map import MORSE_CODE_DICT
+
+
+LETTER_GAP = 2
+WORD_GAP = 4
+
+
+class MorseInterpreter:
+    def __init__(self):
+        self.current_symbol = ""
+        self.last_blink_time = time.time()
+        self.message = ""
+
+    def add_signal(self, signal):
+        self.current_symbol += "." if signal == "DOT" else "-"
+        self.last_blink_time = time.time()
+
+    def update(self):
+        now = time.time()
+        gap = now - self.last_blink_time
+
+        if self.current_symbol and gap >= LETTER_GAP:
+            self.decode_letter()
+
+        if gap >= WORD_GAP and not self.message.endswith(" "):
+            self.message += " "
+
+    def decode_letter(self):
+        letter = MORSE_CODE_DICT.get(self.current_symbol, "?")
+        self.message += letter
+        self.current_symbol = ""
+
+    def get_message(self):
+        return self.message

@@ -1,8 +1,11 @@
 import cv2
-from eye_detector import detect_eyes
-from blink_detector import BlinkDetector
+from src.eye_detector import detect_eyes
+from src.blink_detector import BlinkDetector
+from src.morse_interpreter import MorseInterpreter
+
 
 blink_detector = BlinkDetector()
+morse = MorseInterpreter()
 
 def start_camera():
     cap = cv2.VideoCapture(0)
@@ -21,9 +24,15 @@ def start_camera():
 
             blink = blink_detector.detect_blink(ear)
             if blink:
-                print("Blink Detected:", blink)
+                morse.add_signal(blink)
 
-        cv2.imshow("VisionMorse - Blink Detection", frame)
+        morse.update()
+        message = morse.get_message()
+
+        cv2.putText(frame, message, (30, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+
+        cv2.imshow("VisionMorse - Morse Interpreter", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
