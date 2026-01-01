@@ -2,10 +2,11 @@ import cv2
 from src.eye_detector import detect_eyes
 from src.blink_detector import BlinkDetector
 from src.morse_interpreter import MorseInterpreter
-
+from src.tts import Speaker
 
 blink_detector = BlinkDetector()
 morse = MorseInterpreter()
+speaker = Speaker()
 
 def start_camera():
     cap = cv2.VideoCapture(0)
@@ -36,6 +37,9 @@ def start_camera():
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
+        if morse.is_word_completed():
+            speaker.speak(morse.get_message())
 
     cap.release()
     cv2.destroyAllWindows()
