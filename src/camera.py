@@ -1,12 +1,10 @@
 import cv2
 from src.eye_detector import detect_eyes
 from src.blink_detector import BlinkDetector
-from src.blink_tracker import BlinkTracker
 from src.morse_interpreter import MorseInterpreter
 from src.tts import Speaker
 
 blink_detector = BlinkDetector()
-blink_tracker = BlinkTracker()
 morse = MorseInterpreter()
 speaker = Speaker()
 
@@ -25,12 +23,9 @@ def start_camera():
             ear_right = blink_detector.eye_aspect_ratio(right_eye)
             ear = (ear_left + ear_right) / 2
 
-            eye_closed = ear < blink_detector.EAR_THRESHOLD
-
-            symbol = blink_tracker.update(eye_closed)
-            if symbol:
-                print("Detected:", symbol)
-                morse.add_signal(symbol)
+            blink = blink_detector.detect_blink(ear)
+            if blink:
+                morse.add_signal(blink)
 
         morse.update()
         message = morse.get_message()
@@ -44,10 +39,11 @@ def start_camera():
             break
 
         if morse.is_word_completed():
-            speaker.speak(message)
+            speaker.speak(morse.get_message())
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     start_camera()
