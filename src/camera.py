@@ -30,20 +30,43 @@ def start_camera():
         morse.update()
         message = morse.get_message()
 
-        cv2.putText(frame, message, (30, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+        cv2.putText(
+            frame, message,
+            (30, 50),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (0, 255, 255),
+            2
+        )
+
+        cv2.putText(
+            frame,
+            "C:Clear  R:Reset  S:Speak  Q:Quit",
+            (30, 90),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
 
         cv2.imshow("VisionMorse - Morse Interpreter", frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        key = cv2.waitKey(1) & 0xFF
+
+        if key == ord('q'):
             break
+        elif key == ord('c'):
+            morse.clear_message()
+        elif key == ord('r'):
+            morse.reset_symbol()
+        elif key == ord('s'):
+            speaker.speak(morse.get_message())
 
         if morse.is_word_completed():
             speaker.speak(morse.get_message())
 
     cap.release()
     cv2.destroyAllWindows()
-
 
 if __name__ == "__main__":
     start_camera()

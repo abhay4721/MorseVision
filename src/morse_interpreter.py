@@ -38,3 +38,12 @@ class MorseInterpreter:
 
     def is_word_completed(self):
         return self.word_completed
+
+    def clear_message(self):
+        self.message = ""
+        self.current_symbol = ""
+        self.word_completed = False
+
+    def reset_symbol(self):
+        self.current_symbol = ""
+
