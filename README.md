@@ -252,6 +252,9 @@ cd MorseVison
    ```
 
 
+Use Python 3.10.9 (on windows) to ensure MediaPipe works properly and to fix other related issues.
+
+
 ---
 
 ## Performance & Limitations
