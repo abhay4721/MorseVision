@@ -1,5 +1,3 @@
-project wip
-
 # MorseVision
 Eye Blink Based Morse Code Communication System
 
